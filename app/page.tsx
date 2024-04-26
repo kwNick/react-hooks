@@ -1,21 +1,26 @@
 'use client';
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 // import ContextComp from "./components/ContextComp";
 const counter = 0;
 const CountContext = createContext(counter);
 export default function Home() {
   const [count, setCount] = useState(0);
   const [loaded, setLoaded] = useState(false);
+  const myBtn = useRef<HTMLButtonElement | null>(null);
+  // console.log(myBtn);
+  // const clickIt = () => myBtn?.current?.click();
+
   const changeLoaded = () => {
-    console.log("Timer for 3 seconds has ended")
-    setLoaded(loaded!)
+    // console.log("Changed to " + loaded)
+    setLoaded(false)
   }
   useEffect(() => {
     try {
       // fetch('foo').then(() => { setLoaded(true); console.log("Loading") });
-      setTimeout(() => changeLoaded(), 3000);
-      console.log("make a fetch request!");
       setLoaded(true);
+      setTimeout(() => changeLoaded(), 3000);
+      // console.log("make a fetch request!");
+
 
     } catch (error) {
       throw new Error("Error: fetch did not work: " + error);
@@ -32,6 +37,9 @@ export default function Home() {
           {count}
         </button>
         {loaded ? <p>loading</p> : <h2>Home Page!!</h2>}
+      </div>
+      <div>
+        <button ref={myBtn} >Reference</button>
       </div>
       <CountContext.Provider value={counter} >
         <div>Counter: {counter}</div>
