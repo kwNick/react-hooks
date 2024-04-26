@@ -1,20 +1,28 @@
 'use client';
-import { useEffect, useState } from "react";
-
+import { createContext, useContext, useEffect, useState } from "react";
+// import ContextComp from "./components/ContextComp";
+const counter = 0;
+const CountContext = createContext(counter);
 export default function Home() {
   const [count, setCount] = useState(0);
   const [loaded, setLoaded] = useState(false);
+  const changeLoaded = () => {
+    console.log("Timer for 3 seconds has ended")
+    setLoaded(loaded!)
+  }
   useEffect(() => {
     try {
-      fetch('foo').then(() => { setLoaded(true); console.log("Loading") });
+      // fetch('foo').then(() => { setLoaded(true); console.log("Loading") });
+      setTimeout(() => changeLoaded(), 3000);
+      console.log("make a fetch request!");
+      setLoaded(true);
 
     } catch (error) {
       throw new Error("Error: fetch did not work: " + error);
     }
     // alert("Hello Side Effect!");
     // return alert("Goodbye Side Effect!");
-    setTimeout(() => console.log("Set TimeOut for 3 seconds!", 3000));
-    setLoaded(false);
+
   }, [count]);
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -25,6 +33,27 @@ export default function Home() {
         </button>
         {loaded ? <p>loading</p> : <h2>Home Page!!</h2>}
       </div>
+      <CountContext.Provider value={counter} >
+        <div>Counter: {counter}</div>
+        <ContextComp />
+      </CountContext.Provider>
     </main>
   );
+}
+
+const ContextComp = () => {
+  const prop = useContext(CountContext)
+  return (
+    <div className=" w-[55vw] flex flex-col items-center p-5 gap-y-6">
+      <h2 className="group relative uppercase tracking-wide text-lg border-b border-b-red-400
+       overflow-hidden">
+        Making Use of
+        <span className="normal-case">CreateContext()</span>
+        Hooks in React!
+        <span className="absolute w-[15%] h-[5%] -left-[15%] bottom-0 border-b border-b-gray-600 z-20
+        group-hover:translate-x-[100%] duration-200" />
+      </h2>
+      <p>We passed the count value, of {prop} to this component so we can keep using it through out our project without having to pass props</p>
+    </div>
+  )
 }
